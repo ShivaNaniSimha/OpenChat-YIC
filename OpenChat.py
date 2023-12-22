@@ -2,11 +2,10 @@ from langchain.chat_models import ChatOpenAI
 from googleapiclient.discovery import build
 import streamlit as st
 from langchain.schema import  HumanMessage, SystemMessage
-youtube_api_key="AIzaSyDMaeoyCNW0nCdufqq2oAHUcbJKSDE7EqM"
+from key import youtube_api_key,chat_apikey
 
 #set up your openai api key.
 import os 
-chat_apikey = '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'
 os.environ["OPENAI_API_KEY"]=chat_apikey
 chat=ChatOpenAI(temperature=0.9)
 
