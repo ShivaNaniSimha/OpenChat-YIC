@@ -1,57 +1,32 @@
-from langchain.chat_models import ChatOpenAI
-from googleapiclient.discovery import build
 import streamlit as st
-from langchain.schema import  HumanMessage, SystemMessage
-from key import youtube_api_key,chat_apikey
-
-#set up your openai api key.
-import os 
-os.environ["OPENAI_API_KEY"]=chat_apikey
-chat=ChatOpenAI(temperature=0.9)
+from googleapiclient.discovery import build
+from key import youtube_api_key,gemini_api_key
+import google.generativeai as genai
 
 #web framework
 st.title(":orange[OpenChat]")
 user_prompt = st.chat_input("Enter your prompt ")
 
-
-
-#Chatbot Interaction
-if user_prompt:   
-    messages = [
-    SystemMessage(
-            content='''You are a helpful OpenChat assistant where as an AI language model,
-            trained on enormous data like chatgpt and google bard.And you are founded by shiva nani 
-            and developed by the openchat developers.
-            for every single task you need to respond accordingly and you should aslo understand
-            the follow up messages,remember this instruction particularly.
-            '''
-            ),
-    HumanMessage(
-        content=user_prompt
-            )
-        ]
-       
-#this gives us only the content.
-    response_list=[]
-    for message in chat(messages):
-        response_list.append(message[1])
-        assistant_response=response_list[0]
+#Initializing the gemini
+import os 
+genai.configure(api_key=gemini_api_key)
+model = genai.GenerativeModel("gemini-1.5-flash")
+if user_prompt:
+    response = model.generate_content(user_prompt)
+    assistant_response=response.text
 
     #Integrating youtube inks using youtube data api
-        youtube = build('youtube', 'v3', developerKey=youtube_api_key)
-        video_search_response = youtube.search().list(
-        part="snippet",
-        q=user_prompt,
-        type="video",
-        order="relevance"
-        ).execute()
+    youtube = build('youtube', 'v3', developerKey=youtube_api_key)
+    video_search_response = youtube.search().list(
+    part="snippet",
+    q=user_prompt,
+    type="video",
+    order="relevance"
+    ).execute()
     videos_list=[]
     for item in video_search_response['items']:
         video_id = item['id']['videoId']
         videos_list.append(video_id)
-        
-
-    
 
     #session_state is used to show the conversation history for that session
     if "history" not in st.session_state:
