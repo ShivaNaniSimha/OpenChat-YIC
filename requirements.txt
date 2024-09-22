@@ -1,6 +1,7 @@
 langchain
 openai
 streamlit
-google cloud console 
+google-cloud
+console 
 
 To use the application,clone the repo and just run "streamlit run OpenChat.py" command in the terminal.
