@@ -1,5 +1,4 @@
-langchain
-openai
+google-generativeai
 streamlit
 google-cloud
 console 
